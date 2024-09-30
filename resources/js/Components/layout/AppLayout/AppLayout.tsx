@@ -1,4 +1,4 @@
-import { ArrowLeftRight, Grid2X2 } from 'lucide-react';
+import { ArrowLeftRight, ChartNoAxesCombined, Grid2X2 } from 'lucide-react';
 import { FC } from 'react';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
@@ -11,21 +11,28 @@ const AppLayout: AppLayoutProps = ({ children }) => {
     return (
         <div className="flex">
             <Sidebar>
-                <Sidebar.Link href="/" matcher="/">
-                    <Grid2X2 className="size-5" />
+                <Sidebar.Link href={route('dashboard.index')} matcher="/app">
+                    <Grid2X2 className="size-5 transition-transform" />
                     Dashboard
                 </Sidebar.Link>
                 <Sidebar.Link
-                    href="/app/transactions"
-                    matcher="/app/transactions"
+                    href={route('transaction.index')}
+                    matcher="/app/transactions*"
                 >
                     <ArrowLeftRight className="size-5" />
                     Transactions
                 </Sidebar.Link>
+                <Sidebar.Link
+                    href="/app/investments"
+                    matcher="/app/investments"
+                >
+                    <ChartNoAxesCombined className="size-5" />
+                    Investments
+                </Sidebar.Link>
             </Sidebar>
             <div className="grow bg-muted/40 p-4">
                 <Navbar />
-                <main className="">{children}</main>
+                <main className="pt-4">{children}</main>
             </div>
         </div>
     );

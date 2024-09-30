@@ -1,12 +1,26 @@
 import { Button } from '@/components/ui/button';
-import { Link } from '@inertiajs/react';
-import { ArrowRight, Bell } from 'lucide-react';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Link, router } from '@inertiajs/react';
+import axios from 'axios';
+import { ArrowRight, ChevronDown } from 'lucide-react';
 import { Fragment } from 'react/jsx-runtime';
 
 const Navbar = () => {
     const { pathname } = window.location;
     const segments = pathname.split('/').slice(1);
     let urlBuilder = '';
+
+    function handleLogOut() {
+        axios.post(route('logout'));
+        router.visit(route('dashboard.index'));
+    }
 
     return (
         <nav className="flex h-10 items-center justify-between">
@@ -29,7 +43,7 @@ const Navbar = () => {
                     return (
                         <Fragment key={s}>
                             {i != 0 && (
-                                <ArrowRight className="size-4 text-muted-foreground" />
+                                <ArrowRight className="mx-1 size-4 text-muted-foreground" />
                             )}
                             <Link
                                 href={urlBuilder}
@@ -42,10 +56,26 @@ const Navbar = () => {
                 })}
             </div>
             <div className="flex items-center gap-2">
-                <Button variant={'outline'}>Dereck Guay</Button>
-                <Button variant={'outline'} size="icon">
-                    <Bell />
-                </Button>
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant={'outline'}>
+                            Dereck Guay
+                            <ChevronDown className="ml-2 size-4" />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-56" align="end">
+                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem>Profile</DropdownMenuItem>
+                        <DropdownMenuItem>Settings</DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem>Support</DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem onClick={handleLogOut}>
+                            Log Out
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
             </div>
         </nav>
     );

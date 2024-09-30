@@ -38,7 +38,7 @@ const SidebarLink: SidebarLinkProps = ({ children, href, matcher }) => {
     return (
         <Link
             href={href}
-            className={`flex items-center gap-2 rounded px-4 py-1 font-medium transition-all ${isActive ? 'bg-primary text-primary-foreground shadow' : 'text-muted-foreground hover:bg-secondary hover:text-foreground'}`}
+            className={`flex items-center gap-2 rounded px-4 py-1 font-medium transition-all ${isActive ? 'bg-primary text-primary-foreground shadow hover:scale-105' : 'text-muted-foreground hover:bg-secondary hover:text-foreground'}`}
         >
             {children}
         </Link>

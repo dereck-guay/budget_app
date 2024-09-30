@@ -1,9 +1,8 @@
 import Checkbox from '@/components/Checkbox';
 import InputError from '@/components/InputError';
 import InputLabel from '@/components/InputLabel';
-import PrimaryButton from '@/components/PrimaryButton';
 import TextInput from '@/components/TextInput';
-import GuestLayout from '@/layouts/GuestLayout';
+import { Button } from '@/components/ui/button';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { FormEventHandler } from 'react';
 
@@ -29,7 +28,7 @@ export default function Login({
     };
 
     return (
-        <GuestLayout>
+        <div className="rounded-lg border bg-background p-6 shadow">
             <Head title="Log in" />
 
             {status && (
@@ -97,11 +96,11 @@ export default function Login({
                         </Link>
                     )}
 
-                    <PrimaryButton className="ms-4" disabled={processing}>
+                    <Button className="ms-4" disabled={processing}>
                         Log in
-                    </PrimaryButton>
+                    </Button>
                 </div>
             </form>
-        </GuestLayout>
+        </div>
     );
 }
