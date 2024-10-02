@@ -1,4 +1,10 @@
-import { ArrowLeftRight, ChartNoAxesCombined, Grid2X2 } from 'lucide-react';
+import {
+    ArrowLeftRight,
+    ChartNoAxesCombined,
+    ChartPie,
+    Grid2X2,
+    RotateCw,
+} from 'lucide-react';
 import { FC } from 'react';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
@@ -16,11 +22,25 @@ const AppLayout: AppLayoutProps = ({ children }) => {
                     Dashboard
                 </Sidebar.Link>
                 <Sidebar.Link
+                    href={route('budget.index')}
+                    matcher="/app/budgets*"
+                >
+                    <ChartPie className="size-5" />
+                    Budgets
+                </Sidebar.Link>
+                <Sidebar.Link
                     href={route('transaction.index')}
                     matcher="/app/transactions*"
                 >
                     <ArrowLeftRight className="size-5" />
                     Transactions
+                </Sidebar.Link>
+                <Sidebar.Link
+                    href={`/app/subscriptions`}
+                    matcher="/app/subscriptions*"
+                >
+                    <RotateCw className="size-5" />
+                    Subscriptions
                 </Sidebar.Link>
                 <Sidebar.Link
                     href="/app/investments"

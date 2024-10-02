@@ -1,7 +1,9 @@
 import {
     ColumnDef,
     ColumnFiltersState,
+    Row,
     SortingState,
+    Table as TableType,
     VisibilityState,
     flexRender,
     getCoreRowModel,
@@ -21,21 +23,22 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { useState } from 'react';
+import { ContextMenu, ContextMenuTrigger } from '../ui/context-menu';
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
+    contextMenu?: (row: Row<TData>, table: TableType<TData>) => React.ReactNode;
 }
 
 export function DataTable<TData, TValue>({
     columns,
     data,
+    contextMenu,
 }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
-        {},
-    );
+    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
     const [rowSelection, setRowSelection] = useState({});
 
     const table = useReactTable({
@@ -63,11 +66,15 @@ export function DataTable<TData, TValue>({
         },
     });
 
+    function handleRowClick(row: Row<TData>) {
+        row.toggleSelected(!row.getIsSelected());
+    }
+
     return (
         <div className="w-full">
             <div className="rounded-md border">
                 <Table>
-                    <TableHeader>
+                    <TableHeader className="bg-secondary">
                         {table.getHeaderGroups().map((headerGroup) => (
                             <TableRow key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => {
@@ -76,8 +83,7 @@ export function DataTable<TData, TValue>({
                                             {header.isPlaceholder
                                                 ? null
                                                 : flexRender(
-                                                      header.column.columnDef
-                                                          .header,
+                                                      header.column.columnDef.header,
                                                       header.getContext(),
                                                   )}
                                         </TableHead>
@@ -89,30 +95,28 @@ export function DataTable<TData, TValue>({
                     <TableBody>
                         {table.getRowModel().rows?.length ? (
                             table.getRowModel().rows.map((row) => (
-                                <TableRow
-                                    key={row.id}
-                                    data-state={
-                                        row.getIsSelected() && 'selected'
-                                    }
-                                >
-                                    {row.getVisibleCells().map((cell) => (
-                                        <TableCell key={cell.id}>
-                                            {flexRender(
-                                                cell.column.columnDef.cell,
-                                                cell.getContext(),
-                                            )}
-                                        </TableCell>
-                                    ))}
-                                </TableRow>
+                                <ContextMenu key={row.id}>
+                                    <ContextMenuTrigger asChild>
+                                        <TableRow
+                                            onClick={() => handleRowClick(row)}
+                                            data-state={row.getIsSelected() && 'selected'}
+                                        >
+                                            {row.getVisibleCells().map((cell) => (
+                                                <TableCell key={cell.id}>
+                                                    {flexRender(
+                                                        cell.column.columnDef.cell,
+                                                        cell.getContext(),
+                                                    )}
+                                                </TableCell>
+                                            ))}
+                                        </TableRow>
+                                    </ContextMenuTrigger>
+                                    {contextMenu && contextMenu(row, table)}
+                                </ContextMenu>
                             ))
                         ) : (
                             <TableRow>
-                                <TableCell
-                                    colSpan={columns.length}
-                                    className="h-24 text-center"
-                                >
-                                    No results.
-                                </TableCell>
+                                <TableCell colSpan={columns.length}>No results.</TableCell>
                             </TableRow>
                         )}
                     </TableBody>
