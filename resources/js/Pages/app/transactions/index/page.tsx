@@ -12,6 +12,7 @@ type TransactionsPageProps = FC<{
 }>;
 
 const TransactionsPage: TransactionsPageProps = ({ transactions }) => {
+    console.log(transactions);
     return (
         <TransactionsPageProvider transactions={transactions}>
             <Head title="Transactions" />

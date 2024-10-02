@@ -22,11 +22,12 @@ class Transaction extends Model
     }
 
     public static function search($params = []) {
-        $query = self::query();
+        $query = self::query()->select('transactions.*');
+        
+        $query->where('transactions.user_id', Auth::id());
+        $query->join('budgets', 'budgets.id', '=', 'transactions.budget_id');
 
-        $query->where('user_id', Auth::id());
-
-        $query = self::process_keywords($query, data_get($params, 'keywords', ''), ['title']);
+        $query = self::process_keywords($query, data_get($params, 'keywords', ''), ['transactions.title', 'budgets.title']);
 
         $query->with('budget');
         return $query->orderBy('date', 'DESC')->orderBy('id', 'DESC')->get();
