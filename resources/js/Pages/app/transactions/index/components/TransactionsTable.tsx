@@ -7,48 +7,21 @@ import {
     ContextMenuLabel,
     ContextMenuSeparator,
 } from '@/components/ui/context-menu';
-import { Link, router } from '@inertiajs/react';
+import { Link } from '@inertiajs/react';
 import { CaretSortIcon } from '@radix-ui/react-icons';
 import { format } from 'date-fns';
 import { ArrowDownToLine, ArrowUpFromLine } from 'lucide-react';
 import { useTransactionPageContext } from '../context';
 
 const TransactionsTable = () => {
-    const { transactions, editTransaction } = useTransactionPageContext();
+    const { transactions, editTransaction, deleteTransactions, viewTransaction } =
+        useTransactionPageContext();
 
     return (
         <DataTable
             contextMenu={(row, table) => {
                 const selectedRows = table.getSelectedRowModel().rows;
                 const isMultiple = selectedRows.length > 1;
-
-                function handleDelete() {
-                    router.post(
-                        route('generic.delete', {
-                            entity: 'Transaction',
-                        }),
-                        {
-                            ids: isMultiple
-                                ? selectedRows.map((sr) => sr.original.id).join(',')
-                                : row.original.id,
-                        },
-                        {
-                            onSuccess: () => router.visit(route('transaction.index')),
-                        },
-                    );
-                }
-
-                function handleView() {
-                    router.visit(
-                        route('transaction.show', {
-                            transaction: row.original.id,
-                        }),
-                    );
-                }
-
-                function handleEdit() {
-                    editTransaction(row.original);
-                }
 
                 return (
                     <ContextMenuContent>
@@ -59,12 +32,20 @@ const TransactionsTable = () => {
                         </ContextMenuLabel>
                         <ContextMenuSeparator />
                         {!isMultiple && (
-                            <ContextMenuItem onClick={handleView}>View</ContextMenuItem>
+                            <ContextMenuItem onClick={() => viewTransaction(row.original)}>
+                                View
+                            </ContextMenuItem>
                         )}
                         {!isMultiple && (
-                            <ContextMenuItem onClick={handleEdit}>Edit</ContextMenuItem>
+                            <ContextMenuItem onClick={() => editTransaction(row.original)}>
+                                Edit
+                            </ContextMenuItem>
                         )}
-                        <ContextMenuItem onClick={handleDelete}>Delete</ContextMenuItem>
+                        <ContextMenuItem
+                            onClick={() => deleteTransactions(selectedRows.map((r) => r.original))}
+                        >
+                            Delete
+                        </ContextMenuItem>
                     </ContextMenuContent>
                 );
             }}

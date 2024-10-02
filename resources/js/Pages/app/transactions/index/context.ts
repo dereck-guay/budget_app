@@ -5,6 +5,8 @@ type TransactionPageContext = {
     transactions: Transaction[];
     selectedTransaction: Transaction | null;
     editTransaction: (transaction: Transaction) => void;
+    deleteTransactions: (transactions: Transaction[]) => void;
+    viewTransaction: (transaction: Transaction) => void;
 };
 
 export const TransactionPageContext = createContext<TransactionPageContext | null>(null);

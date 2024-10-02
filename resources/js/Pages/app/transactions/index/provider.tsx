@@ -2,6 +2,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sh
 import { Tabs } from '@/components/ui/tabs';
 import TransactionForm from '@/pages/forms/TransactionForm';
 import { Transaction } from '@/types/models/transactions';
+import { router } from '@inertiajs/react';
 import { FC, useState } from 'react';
 import { TransactionPageContext } from './context';
 
@@ -27,12 +28,36 @@ const TransactionsPageProvider: TransactionsPageProviderProps = ({ children, tra
         setIsTransactionFormOpen(true);
     }
 
+    function deleteTransactions(transactions: Transaction[]) {
+        router.post(
+            route('generic.delete', {
+                entity: 'Transaction',
+            }),
+            {
+                ids: transactions.map((t) => t.id).join(','),
+            },
+            {
+                onSuccess: () => router.visit(route('transaction.index')),
+            },
+        );
+    }
+
+    function viewTransaction(transaction: Transaction) {
+        router.visit(
+            route('transaction.show', {
+                transaction: transaction.id,
+            }),
+        );
+    }
+
     return (
         <TransactionPageContext.Provider
             value={{
                 transactions,
                 selectedTransaction,
                 editTransaction,
+                deleteTransactions,
+                viewTransaction,
             }}
         >
             <Sheet open={isTransactionFormOpen} onOpenChange={toggleTransactionFormOpen}>
