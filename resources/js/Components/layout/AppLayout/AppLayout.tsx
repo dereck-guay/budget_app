@@ -27,7 +27,7 @@ const AppLayout: AppLayoutProps = ({ children }) => {
                     <ChartNoAxesCombined className="size-5" />
                     Investments
                 </Sidebar.Link>
-                <Sidebar.Link href="/app/investments" matcher="/app/investments">
+                <Sidebar.Link href={route('account.index')} matcher="/app/accounts*">
                     <WalletCards className="size-5" />
                     Accounts
                 </Sidebar.Link>

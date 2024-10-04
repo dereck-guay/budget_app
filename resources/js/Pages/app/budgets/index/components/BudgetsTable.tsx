@@ -8,6 +8,7 @@ import {
 import { Progress } from '@/components/ui/progress';
 import { deleteEntity } from '@/lib/helpers';
 import { Link } from '@inertiajs/react';
+import { GripVertical } from 'lucide-react';
 import { useBudgetPageContext } from '../context';
 
 const BudgetsTable = () => {
@@ -49,6 +50,14 @@ const BudgetsTable = () => {
                 );
             }}
             columns={[
+                {
+                    header: '',
+                    accessorKey: 'title',
+                    meta: {
+                        className: 'w-1 whitespace-nowrap',
+                    },
+                    cell: ({ row }) => <GripVertical className="size-4 cursor-grabbing" />,
+                },
                 {
                     header: 'Budget',
                     accessorKey: 'title',

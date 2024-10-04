@@ -15,7 +15,10 @@ return new class extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id');
-            $table->foreignId('budget_id');
+            $table->foreignId('budget_id')->nullable();
+            $table->foreignId('from_account_id')->nullable();
+            $table->foreignId('to_account_id')->nullable();
+
             $table->string('title', 50);
             $table->decimal('amount');
             $table->boolean('is_investement')->default('false');

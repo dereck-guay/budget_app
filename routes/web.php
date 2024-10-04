@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GenericController;
@@ -15,6 +16,14 @@ Route::get('/', function() {
 
 Route::group(['middleware' => ['auth', 'verified'], 'prefix' => 'app'], function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard.index');
+
+    Route::group(['prefix' => 'accounts'], function () {
+        Route::get('/', [AccountController::class, 'index'])->name('account.index');
+        Route::get('/{account}', [AccountController::class, 'show'])->name('account.show');
+        Route::post('/', [AccountController::class, 'store'])->name('account.store');
+        Route::put('/{account}', [AccountController::class, 'update'])->name('account.update');
+        Route::delete('/{account}', [AccountController::class, 'destroy'])->name('account.destroy');
+    });
 
     Route::group(['prefix' => 'budgets'], function () {
         Route::get('/', [BudgetController::class, 'index'])->name('budget.index');
