@@ -1,15 +1,10 @@
 import {
     ColumnDef,
-    ColumnFiltersState,
     Row,
-    SortingState,
     Table as TableType,
-    VisibilityState,
     flexRender,
     getCoreRowModel,
-    getFilteredRowModel,
     getPaginationRowModel,
-    getSortedRowModel,
     useReactTable,
 } from '@tanstack/react-table';
 
@@ -22,8 +17,13 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import { useState } from 'react';
 import { ContextMenu, ContextMenuTrigger } from '../ui/context-menu';
+
+declare module '@tanstack/react-table' {
+    interface ColumnMeta<TData, TValue> {
+        className: string;
+    }
+}
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -36,39 +36,18 @@ export function DataTable<TData, TValue>({
     data,
     contextMenu,
 }: DataTableProps<TData, TValue>) {
-    const [sorting, setSorting] = useState<SortingState>([]);
-    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-    const [rowSelection, setRowSelection] = useState({});
-
     const table = useReactTable({
         data,
         columns,
-        onSortingChange: setSorting,
-        onColumnFiltersChange: setColumnFilters,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
-        getSortedRowModel: getSortedRowModel(),
-        getFilteredRowModel: getFilteredRowModel(),
-        onColumnVisibilityChange: setColumnVisibility,
-        onRowSelectionChange: setRowSelection,
         initialState: {
             pagination: {
                 pageIndex: 0,
                 pageSize: 10,
             },
         },
-        state: {
-            sorting,
-            columnFilters,
-            columnVisibility,
-            rowSelection,
-        },
     });
-
-    function handleRowClick(row: Row<TData>) {
-        row.toggleSelected(!row.getIsSelected());
-    }
 
     return (
         <div className="w-full">
@@ -97,12 +76,14 @@ export function DataTable<TData, TValue>({
                             table.getRowModel().rows.map((row) => (
                                 <ContextMenu key={row.id}>
                                     <ContextMenuTrigger asChild>
-                                        <TableRow
-                                            onClick={() => handleRowClick(row)}
-                                            data-state={row.getIsSelected() && 'selected'}
-                                        >
+                                        <TableRow data-state={row.getIsSelected() && 'selected'}>
                                             {row.getVisibleCells().map((cell) => (
-                                                <TableCell key={cell.id}>
+                                                <TableCell
+                                                    key={cell.id}
+                                                    className={
+                                                        cell.column.columnDef.meta?.className
+                                                    }
+                                                >
                                                     {flexRender(
                                                         cell.column.columnDef.cell,
                                                         cell.getContext(),
@@ -123,10 +104,7 @@ export function DataTable<TData, TValue>({
                 </Table>
             </div>
             <div className="flex items-center justify-end space-x-2 py-4">
-                <div className="flex-1 text-sm text-muted-foreground">
-                    {table.getFilteredSelectedRowModel().rows.length} of{' '}
-                    {table.getFilteredRowModel().rows.length} row(s) selected.
-                </div>
+                <div className="flex-1 text-sm text-muted-foreground"></div>
                 <div className="space-x-2">
                     <Button
                         variant="outline"

@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\SearchableTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
 class Budget extends Model
 {
-    use HasFactory;
+    use HasFactory, SearchableTrait;
 
     protected $guarded = [];
 
@@ -25,6 +26,9 @@ class Budget extends Model
 
         $query->where('user_id', Auth::id());
 
+        $query = self::process_keywords($query, data_get($params, 'keywords', ''), ['title']);
+
+        $query->with('transactions');
         return $query->get();
     }
 }

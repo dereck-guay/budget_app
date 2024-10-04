@@ -19,6 +19,9 @@ Route::group(['middleware' => ['auth', 'verified'], 'prefix' => 'app'], function
     Route::group(['prefix' => 'budgets'], function () {
         Route::get('/', [BudgetController::class, 'index'])->name('budget.index');
         Route::get('/{budget}', [BudgetController::class, 'show'])->name('budget.show');
+        Route::post('/', [BudgetController::class, 'store'])->name('budget.store');
+        Route::put('/{budget}', [BudgetController::class, 'update'])->name('budget.update');
+        Route::delete('/{budget}', [BudgetController::class, 'destroy'])->name('budget.destroy');
     }); 
 
     Route::group(['prefix' => 'transactions'], function () {

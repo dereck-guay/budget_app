@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Budget;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,8 +17,12 @@ class TransactionController extends Controller
             'toDate' => $request->get('to'),
         ]);
 
+        // Needed for the select in the form
+        $budgets = Budget::search(); 
+
         return inertia('app/transactions/index/page', compact(
-                'transactions'
+                'transactions',
+                'budgets'
             )
         );
     }
@@ -26,7 +31,8 @@ class TransactionController extends Controller
         $validData = $request->validate([
             'title' => 'required',
             'amount' => 'required|numeric',
-            'date' => 'required|date'
+            'date' => 'required|date',
+            'budget_id' => 'required|numeric'
         ]);
 
         Transaction::create([
@@ -47,7 +53,8 @@ class TransactionController extends Controller
         $validData = $request->validate([
             'title' => '',
             'amount' => 'numeric',
-            'date' => 'date'
+            'date' => 'date',
+            'budget_id' => 'numeric'
         ]);
 
         $transaction->update($validData);

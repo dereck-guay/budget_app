@@ -1,6 +1,7 @@
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Tabs } from '@/components/ui/tabs';
-import TransactionForm from '@/pages/forms/TransactionForm';
+import TransactionForm from '@/forms/TransactionForm';
+import { Budget } from '@/types/models/budgets';
 import { Transaction } from '@/types/models/transactions';
 import { router } from '@inertiajs/react';
 import { FC, useState } from 'react';
@@ -9,9 +10,14 @@ import { TransactionPageContext } from './context';
 type TransactionsPageProviderProps = FC<{
     children: React.ReactNode;
     transactions: Transaction[];
+    budgets: Budget[];
 }>;
 
-const TransactionsPageProvider: TransactionsPageProviderProps = ({ children, transactions }) => {
+const TransactionsPageProvider: TransactionsPageProviderProps = ({
+    children,
+    transactions,
+    budgets,
+}) => {
     const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
     const [isTransactionFormOpen, setIsTransactionFormOpen] = useState(false);
 
@@ -28,13 +34,13 @@ const TransactionsPageProvider: TransactionsPageProviderProps = ({ children, tra
         setIsTransactionFormOpen(true);
     }
 
-    function deleteTransactions(transactions: Transaction[]) {
+    function deleteTransaction(transaction: Transaction) {
         router.post(
             route('generic.delete', {
                 entity: 'Transaction',
             }),
             {
-                ids: transactions.map((t) => t.id).join(','),
+                ids: transaction.id,
             },
             {
                 onSuccess: () => router.visit(route('transaction.index')),
@@ -56,7 +62,7 @@ const TransactionsPageProvider: TransactionsPageProviderProps = ({ children, tra
                 transactions,
                 selectedTransaction,
                 editTransaction,
-                deleteTransactions,
+                deleteTransaction,
                 viewTransaction,
             }}
         >
@@ -68,7 +74,7 @@ const TransactionsPageProvider: TransactionsPageProviderProps = ({ children, tra
                         <SheetTitle>New Transaction</SheetTitle>
                     </SheetHeader>
 
-                    <TransactionForm transaction={selectedTransaction} />
+                    <TransactionForm transaction={selectedTransaction} budgets={budgets} />
                 </SheetContent>
             </Sheet>
         </TransactionPageContext.Provider>

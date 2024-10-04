@@ -5,7 +5,7 @@ type TransactionPageContext = {
     transactions: Transaction[];
     selectedTransaction: Transaction | null;
     editTransaction: (transaction: Transaction) => void;
-    deleteTransactions: (transactions: Transaction[]) => void;
+    deleteTransaction: (transaction: Transaction) => void;
     viewTransaction: (transaction: Transaction) => void;
 };
 

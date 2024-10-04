@@ -1,19 +1,28 @@
+import DateTimePicker from '@/components/dataware/Fields/DateTimePicker';
 import { Button } from '@/components/ui/button';
-import { Form, FormField, FormItem, FormLabel } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import { SheetClose } from '@/components/ui/sheet';
+import { Budget } from '@/types/models/budgets';
 import { Transaction } from '@/types/models/transactions';
 import { router, usePage } from '@inertiajs/react';
 import { FC } from 'react';
 import { useForm } from 'react-hook-form';
-import DateTimePicker from '../../components/dataware/Fields/DateTimePicker';
 
 type TransactionFormProps = FC<{
     transaction: Transaction | null;
+    budgets: Budget[];
 }>;
 
-const TransactionForm: TransactionFormProps = ({ transaction }) => {
+const TransactionForm: TransactionFormProps = ({ transaction, budgets }) => {
     const { errors } = usePage().props;
 
     const form = useForm<Transaction>({
@@ -21,6 +30,7 @@ const TransactionForm: TransactionFormProps = ({ transaction }) => {
             title: transaction?.title,
             amount: transaction?.amount,
             date: transaction?.date,
+            budget_id: transaction?.budget_id,
         },
     });
 
@@ -46,36 +56,52 @@ const TransactionForm: TransactionFormProps = ({ transaction }) => {
 
     return (
         <Form {...form}>
-            <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="grid grid-cols-3 gap-4"
-            >
+            <form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-cols-3 gap-4">
                 <div className="col-span-3">
                     <Label>Title</Label>
-                    <Input
-                        placeholder="Transaction date and time"
-                        {...form.register('title')}
-                    />
-                    {errors.title && (
-                        <small className="text-destructive">
-                            {errors.title}
-                        </small>
-                    )}
+                    <Input autoFocus placeholder="Transaction title" {...form.register('title')} />
+                    {errors.title && <small className="text-destructive">{errors.title}</small>}
                 </div>
 
                 <div className="col-span-3">
                     <Label>Amount</Label>
                     <Input
                         type="number"
-                        placeholder="Transaction date and time"
+                        placeholder="Transaction amount"
                         {...form.register('amount')}
                     />
-                    {errors.amount && (
-                        <small className="text-destructive">
-                            {errors.amount}
-                        </small>
-                    )}
+                    {errors.amount && <small className="text-destructive">{errors.amount}</small>}
                 </div>
+
+                <FormField
+                    control={form.control}
+                    name="budget_id"
+                    render={({ field }) => (
+                        <FormItem className="col-span-full">
+                            <FormLabel>Budget</FormLabel>
+                            <Select
+                                onValueChange={field.onChange}
+                                defaultValue={field.value?.toString()}
+                            >
+                                <FormControl>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Select a budget" />
+                                    </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                    {budgets.map((budget) => (
+                                        <SelectItem key={budget.id} value={budget.id.toString()}>
+                                            {budget.title}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                            {errors.budget_id && (
+                                <small className="text-destructive">{errors.amount}</small>
+                            )}
+                        </FormItem>
+                    )}
+                />
 
                 <FormField
                     control={form.control}
@@ -85,9 +111,7 @@ const TransactionForm: TransactionFormProps = ({ transaction }) => {
                             <FormLabel>Date</FormLabel>
                             <DateTimePicker field={field} hasTime />
                             {errors.date && (
-                                <small className="text-destructive">
-                                    {errors.date}
-                                </small>
+                                <small className="text-destructive">{errors.date}</small>
                             )}
                         </FormItem>
                     )}

@@ -1,6 +1,4 @@
 import { DataTable } from '@/components/dataware/DataTable';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
 import {
     ContextMenuContent,
     ContextMenuItem,
@@ -8,77 +6,38 @@ import {
     ContextMenuSeparator,
 } from '@/components/ui/context-menu';
 import { Link } from '@inertiajs/react';
-import { CaretSortIcon } from '@radix-ui/react-icons';
 import { format } from 'date-fns';
 import { ArrowDownToLine, ArrowUpFromLine } from 'lucide-react';
 import { useTransactionPageContext } from '../context';
 
 const TransactionsTable = () => {
-    const { transactions, editTransaction, deleteTransactions, viewTransaction } =
+    const { transactions, editTransaction, deleteTransaction, viewTransaction } =
         useTransactionPageContext();
 
     return (
         <DataTable
+            data={transactions}
             contextMenu={(row, table) => {
-                const selectedRows = table.getSelectedRowModel().rows;
-                const isMultiple = selectedRows.length > 1;
-
                 return (
                     <ContextMenuContent>
-                        <ContextMenuLabel>
-                            {isMultiple
-                                ? `${selectedRows.length} Transactions`
-                                : row.getValue('title')}
-                        </ContextMenuLabel>
+                        <ContextMenuLabel>{row.original.title}</ContextMenuLabel>
                         <ContextMenuSeparator />
-                        {!isMultiple && (
-                            <ContextMenuItem onClick={() => viewTransaction(row.original)}>
-                                View
-                            </ContextMenuItem>
-                        )}
-                        {!isMultiple && (
-                            <ContextMenuItem onClick={() => editTransaction(row.original)}>
-                                Edit
-                            </ContextMenuItem>
-                        )}
-                        <ContextMenuItem
-                            onClick={() => deleteTransactions(selectedRows.map((r) => r.original))}
-                        >
+                        <ContextMenuItem onClick={() => viewTransaction(row.original)}>
+                            View
+                        </ContextMenuItem>
+                        <ContextMenuItem onClick={() => editTransaction(row.original)}>
+                            Edit
+                        </ContextMenuItem>
+                        <ContextMenuItem onClick={() => deleteTransaction(row.original)}>
                             Delete
                         </ContextMenuItem>
                     </ContextMenuContent>
                 );
             }}
-            data={transactions}
             columns={[
                 {
-                    id: 'select',
-                    header: ({ table }) => (
-                        <div className="flex w-1 items-center whitespace-nowrap">
-                            <Checkbox
-                                checked={
-                                    table.getIsAllPageRowsSelected() ||
-                                    (table.getIsSomePageRowsSelected() && 'indeterminate')
-                                }
-                                onCheckedChange={(value) =>
-                                    table.toggleAllPageRowsSelected(!!value)
-                                }
-                                aria-label="Select all"
-                            />
-                        </div>
-                    ),
-                    cell: ({ row }) => (
-                        <div className="flex w-1 items-center whitespace-nowrap">
-                            <Checkbox
-                                checked={row.getIsSelected()}
-                                onCheckedChange={(value) => row.toggleSelected(!!value)}
-                                aria-label="Select row"
-                            />
-                        </div>
-                    ),
-                },
-                {
                     header: 'Budget',
+                    accessorKey: 'budget',
                     cell: ({ row }) => (
                         <Link
                             href={route('budget.show', {
@@ -89,35 +48,24 @@ const TransactionsTable = () => {
                             {row.original.budget.title}
                         </Link>
                     ),
-                    accessorKey: 'budget',
                 },
                 {
-                    header: ({ column }) => {
-                        return (
-                            <Button
-                                className="w-full justify-start"
-                                variant="ghost"
-                                onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-                            >
-                                Transaction
-                                <CaretSortIcon className="ml-2 h-4 w-4" />
-                            </Button>
-                        );
-                    },
+                    header: 'Transactions',
+                    accessorKey: 'title',
                     cell: ({ row }) => (
                         <Link
                             href={route('transaction.show', {
                                 transaction: row.original.id,
                             })}
-                            className="ml-4 inline-flex items-center gap-2 hover:underline"
+                            className="inline-flex items-center gap-2 hover:underline"
                         >
                             {row.getValue('title')}
                         </Link>
                     ),
-                    accessorKey: 'title',
                 },
                 {
                     header: 'Amount',
+                    accessorKey: 'amount',
                     cell: ({ row }) => {
                         const amount = Number(row.getValue('amount'));
                         return (
@@ -133,13 +81,13 @@ const TransactionsTable = () => {
                             </div>
                         );
                     },
-                    accessorKey: 'amount',
                 },
                 {
+                    header: 'Date',
+                    accessorKey: 'date',
                     cell: ({ row }) => {
                         return format(new Date(row.original.date), 'MMM. Mo yyyy, h:mm bb');
                     },
-                    header: 'Date',
                 },
             ]}
         />

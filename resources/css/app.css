@@ -74,3 +74,67 @@
         font-family: 'Poppins';
     }
 }
+
+/* FullCalendar shadcn UI look */
+.fc {
+    @apply text-sm;
+    font-family: 'Poppins';
+    --fc-border-color: hsl(var(--border));
+    --fc-button-bg-color: hsl(var(--card));
+    --fc-button-text-color: hsl(var(--card-foreground));
+    --fc-button-border-radius: var(--radius);
+    --fc-event-bg-color: hsl(var(--primary));
+    --fc-event-text-color: hsl(var(--primary-foreground));
+    --fc-event-border-color: hsl(var(--primary));
+    --fc-today-bg-color: hsl(var(--accent) / 0.2);
+    --fc-today-border-color: hsl(var(--primary));
+    --fc-day-header-bg-color: hsl(var(--muted));
+    --fc-day-header-text-color: hsl(var(--muted-foreground));
+    --fc-now-indicator-color: hsl(var(--ring));
+}
+
+/* Event styling */
+.fc .fc-event {
+    cursor: pointer;
+}
+
+.fc .fc-event:hover {
+    background-color: hsl(var(--secondary) / 0.8);
+}
+
+.fc .fc-col-header-cell {
+    background-color: hsl(var(--muted));
+    color: hsl(var(--muted-foreground));
+    font-weight: 500;
+    padding: 0.5rem;
+    @apply h-10;
+}
+
+/* Day grid styling (individual day cells) */
+.fc .fc-daygrid-day {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    border: 1px solid hsl(var(--border));
+    transition: background-color 0.3s ease;
+}
+
+.fc .fc-daygrid-day:hover {
+    background-color: hsl(var(--accent) / 0.1);
+}
+
+/* Today highlight */
+.fc .fc-daygrid-day.fc-day-today {
+    background-color: hsl(var(--primary) / 0.2);
+}
+
+/* Modal for events (if you're using one) */
+.fc-event-modal {
+    background-color: hsl(var(--popover));
+    color: hsl(var(--popover-foreground));
+    border-radius: var(--radius);
+    box-shadow: 0 4px 8px hsl(var(--foreground) / 0.1);
+}
+
+.fc .destructive-pin-color .fc-daygrid-event-dot {
+    @apply border-destructive !important;
+}

@@ -10,7 +10,7 @@ type SidebarProps = FC<{
 
 const Sidebar: SidebarProps = ({ children }) => {
     return (
-        <aside className="h-screen w-60 border-r p-4">
+        <aside className="h-screen w-60 min-w-60 border-r p-4">
             <div className="mb-4 flex h-10 items-center">
                 <h1 className="flex items-center gap-1 text-xl font-bold">
                     <FileChartPie className="size-8 fill-primary/30 stroke-primary" />
@@ -31,9 +31,7 @@ type SidebarLinkProps = FC<{
 const SidebarLink: SidebarLinkProps = ({ children, href, matcher }) => {
     const { pathname } = window.location;
 
-    const isActive = pathname.match(
-        new RegExp(`^${matcher}$`.replace('*$', '($|/)')),
-    );
+    const isActive = pathname.match(new RegExp(`^${matcher}$`.replace('*$', '($|/)')));
 
     return (
         <Link
