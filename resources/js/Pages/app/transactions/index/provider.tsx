@@ -1,5 +1,4 @@
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import { Tabs } from '@/components/ui/tabs';
 import TransactionForm from '@/forms/TransactionForm';
 import { Budget } from '@/types/models/budgets';
 import { Transaction } from '@/types/models/transactions';
@@ -67,7 +66,7 @@ const TransactionsPageProvider: TransactionsPageProviderProps = ({
             }}
         >
             <Sheet open={isTransactionFormOpen} onOpenChange={toggleTransactionFormOpen}>
-                <Tabs defaultValue="table">{children}</Tabs>
+                {children}
 
                 <SheetContent className="min-w-[30vw]">
                     <SheetHeader>

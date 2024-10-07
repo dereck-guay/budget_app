@@ -1,6 +1,6 @@
+import { Transaction } from '@/types/models/transactions';
 import { Head } from '@inertiajs/react';
 import { FC } from 'react';
-import { Transaction } from '../../../types/models/transactions';
 
 type TransactionShowProps = FC<{
     transaction: Transaction;

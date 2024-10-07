@@ -6,6 +6,7 @@ use App\Models\Budget;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Response;
 
 class TransactionController extends Controller
 {
@@ -25,6 +26,14 @@ class TransactionController extends Controller
                 'budgets'
             )
         );
+    }
+
+    public function show(Request $request, Transaction $transaction) {
+        if ($transaction->user_id != Auth::id()) {
+            return abort(404, "Transaction not found.");
+        }
+
+        return inertia('app/transactions/show/page', compact('transaction'));
     }
 
     public function store(Request $request) {
@@ -60,9 +69,5 @@ class TransactionController extends Controller
         $transaction->update($validData);
 
         return to_route('transaction.index');
-    }
-
-    public function show(Request $request, Transaction $transaction) {
-        return inertia('app/transactions/show/page', compact('transaction'));
     }
 }

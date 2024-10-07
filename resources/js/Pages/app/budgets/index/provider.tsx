@@ -46,7 +46,7 @@ const BudgetPageProvider: BudgetPageProviderProps = ({ children, budgets }) => {
         >
             <Head title="Budgets" />
             <Sheet open={isBudgetFormOpen} onOpenChange={toggleIsBudgetFormOpen}>
-                <div>{children}</div>
+                {children}
                 <SheetContent className="min-w-[30vw]">
                     <SheetHeader>
                         <SheetTitle>New Budget</SheetTitle>

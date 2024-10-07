@@ -1,4 +1,4 @@
-import { ArrowLeftRight, ChartNoAxesCombined, ChartPie, Grid2X2, WalletCards } from 'lucide-react';
+import { ArrowLeftRight, ChartNoAxesCombined, ChartPie, Grid2X2 } from 'lucide-react';
 import { FC } from 'react';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
@@ -26,10 +26,6 @@ const AppLayout: AppLayoutProps = ({ children }) => {
                 <Sidebar.Link href="/app/investments" matcher="/app/investments">
                     <ChartNoAxesCombined className="size-5" />
                     Investments
-                </Sidebar.Link>
-                <Sidebar.Link href={route('account.index')} matcher="/app/accounts*">
-                    <WalletCards className="size-5" />
-                    Accounts
                 </Sidebar.Link>
             </Sidebar>
             <div className="h-screen grow overflow-y-auto bg-muted/40 p-4">

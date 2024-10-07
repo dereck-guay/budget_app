@@ -1,4 +1,4 @@
-import DateTimePicker from '@/components/dataware/Fields/DateTimePicker';
+import DateTimePicker from '@/components/dataware/fields/DateTimePicker';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';

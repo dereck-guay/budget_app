@@ -50,7 +50,7 @@ const TransactionsTable = () => {
                     ),
                 },
                 {
-                    header: 'Transactions',
+                    header: 'Transaction',
                     accessorKey: 'title',
                     cell: ({ row }) => (
                         <Link
